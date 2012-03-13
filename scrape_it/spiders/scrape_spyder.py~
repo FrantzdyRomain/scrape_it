@@ -8,7 +8,8 @@
 from scrapy.spider import BaseSpider
 from scrapy.http import Request
 from scrapy.http import FormRequest
-from scrapy.selector import HtmlxPathSelector
+from scrapy.selector import HtmlXPathSelector
+
 from scrapy import log
 import sys
 
@@ -18,10 +19,21 @@ sys.setdefaultencoding('utf-8')
 #create our class and inherit from BaseSpider
 class ScrapeSpider(BaseSpider):
 	name = "Scrape_It"
-	domains = ["www.mtq.gouv.qc.ca"] #TODO
+	domains = [ #TODO add url/domain]
 	urls = [
-		 "http://www.mtq.gouv.qc.ca/pls/apex/f?p=102:56:::NO:RP::"
+		 #TODO add url
 	]
 
+#second funtion..change any.html to required html file
 	def parse(self, response):
-		pass
+		return [FormRequest.from_response(response,
+
+						  data={"request": "RECHR"},
+						  callback=self.parseList)]
+	
+	def parseList(self, response):
+		self.log("Results after submitting form, ", level=log.INFO)
+		with open("ANY.html, "w") as f:
+			f.write(response.body)
+		import os
+		os.system("open ANY.html")
